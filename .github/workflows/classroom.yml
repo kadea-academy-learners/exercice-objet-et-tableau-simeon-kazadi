@@ -1,0 +1,81 @@
+name: Autograding Tests
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feat/**'
+  pull_request: {}
+  workflow_dispatch: {}
+  repository_dispatch: {}
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run create-user tests
+        id: create_user
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: create-user
+          setup-command: npm ci
+          command: npm test -- tests/create-user.test.js --silent
+          timeout: 60
+          max-score: 1
+
+      - name: Run array-average tests
+        id: array_average
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: array-average
+          setup-command: npm ci
+          command: npm test -- tests/array-average.test.js --silent
+          timeout: 60
+          max-score: 1
+
+      - name: Run user-management tests
+        id: user_management
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: user-management
+          setup-command: npm ci
+          command: npm test -- tests/user-management.test.js --silent
+          timeout: 60
+          max-score: 1
+
+      - name: Run show-student-bulletin tests
+        id: show_student_bulletin
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: show-student-bulletin
+          setup-command: npm ci
+          command: npm test -- tests/show-student-bulletin.test.js --silent
+          timeout: 60
+          max-score: 1
+
+      - name: Run authentification-system tests
+        id: auth_system
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: authentification-system
+          setup-command: npm ci
+          command: npm test -- tests/authentification-system.test.js --silent
+          timeout: 60
+          max-score: 1
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          CREATE_USER_RESULTS: "${{steps.create_user.outputs.result}}"
+          ARRAY_AVERAGE_RESULTS: "${{steps.array_average.outputs.result}}"
+          USER_MANAGEMENT_RESULTS: "${{steps.user_management.outputs.result}}"
+          SHOW_STUDENT_BULLETIN_RESULTS: "${{steps.show_student_bulletin.outputs.result}}"
+          AUTH_SYSTEM_RESULTS: "${{steps.auth_system.outputs.result}}"
+        with:
+          runners: "create_user,array_average,user_management,show_student_bulletin,auth_system"

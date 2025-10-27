@@ -1,0 +1,16 @@
+{
+  "name": "exercises_javascript-array-object",
+  "version": "1.0.0",
+  "description": "A collection of JavaScript exercises",
+  "main": "index.js",
+  "author": "Kadea Academy",
+  "license": "MIT",
+  "type": "commonjs",
+
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
